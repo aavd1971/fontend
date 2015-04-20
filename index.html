@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Invoice Manager</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/css/bootstrap-theme.min.css"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.4/js/bootstrap.min.js"></script>
+    <!--<script src="assets/js/mustache.min.js"></script>-->
+    <!--<script src="assets/js/validator.min.js"></script>-->
+    <!--<script src="assets/js/main.js"></script>-->
+    <script src="assets/js/main.min.js"></script>
+    <link rel="stylesheet" href="assets/css/main.css"/>
+</head>
+<body>
+<ul id="menu" class="nav nav-pills">
+    <li><a href="<?=base_url()?>">Home</a></li>
+    <li><a href="<?=base_url()?>user/logout">Logout</a></li>
+    <li><a href="/front/">Invoice</a></li>
+</ul>
+
+<script id="tempRecordRow" type="x-tmpl-mustache">
+<tr>
+                <td><button class="removeRow btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i></button></td>
+                <td><input name="Description[]" type="text" class="form-control input-sm" value="{{ Description }}" required/></td>
+                <td><input name="UnitPrice[]" type="text" class="form-control input-sm" value="{{ UnitPrice }}" required/></td>
+                <td><input name="Quantity[]" type="text" class="form-control input-sm" value="{{ Quantity }}" required/></td>
+                <td><input name="TotalPrice[]" type="text" class="form-control input-sm" value="{{ TotalPrice }}" readonly/></td>
+                <td><input name="VAT[]" type="text" class="form-control input-sm" value="{{ VAT }}" required/></td>
+                <td><input name="VATAmount[]" type="text" class="form-control input-sm" value="{{ VATAmount }}" readonly/></td>
+                <td><input name="Total[]" type="text" class="form-control input-sm" value="{{ Total }}" readonly /></td>
+</tr>
+</script>
+
+<div class="nav nav-pills">
+    <h1>Invoice Page</h1>
+</div>
+<div class="container col-lg-12">
+<form id="formMain" action="" method="get" data-toggle="validator" novalidate="true">
+    <div class="row">
+        <div class="form-group col-lg-3">
+            <label for="invoiceNumber">
+                Invoice Number
+            </label>
+            <input type="text" class="form-control" id="invoiceNumber" name="invoiceNumber" placeholder="input data" required />
+            <div class="help-block with-errors"></div>
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="Date">
+                Date
+            </label>
+            <input type="date" class="form-control" id="Date" name="Date" placeholder="input data" required/>
+            <div class="help-block with-errors"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-9">
+            <label for="Company">
+                Company
+            </label>
+            <select class="form-control" id="Company" name="Company" required>
+                <option value="">select data</option>
+            </select>
+            <div class="help-block with-errors"></div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-3">
+            <label for="Name">
+                Company Name
+            </label>
+            <input type="text" class="form-control" id="Name" name="Name" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="Adress">
+                Adress
+            </label>
+            <input type="text" class="form-control" id="Adress" name="Adress" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="City">
+                City
+            </label>
+            <input type="text" class="form-control" id="City" name="City" placeholder="input data" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-3">
+            <label for="PostalCode">
+                Postal Code
+            </label>
+            <input type="number" step="any" class="form-control" id="PostalCode" name="PostalCode" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="VAT">
+                VAT
+            </label>
+            <input type="number" step="any" class="form-control" id="VAT" name="VAT" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="FiscalCode">
+                Fiscal Code
+            </label>
+            <input type="number" step="any" class="form-control" id="FiscalCode" name="FiscalCode" placeholder="input data" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-9">
+            <label for="Client">
+                Client
+            </label>
+            <select class="form-control" id="Client" name="Client" required>
+                <div class="help-block with-errors"></div>
+                <option value="">select data</option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-3">
+            <label for="NameClient">
+                Client Name
+            </label>
+            <input type="text" class="form-control" id="NameClient" name="NameClient" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="AdressClient">
+                Adress
+            </label>
+            <input type="text" class="form-control" id="AdressClient" name="AdressClient" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="CityClient">
+                City
+            </label>
+            <input type="text" class="form-control" id="CityClient" name="CityClient" placeholder="input data" />
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group col-lg-3">
+            <label for="PostalCodeClient">
+                Postal Code
+            </label>
+            <input type="number" step="any" class="form-control" id="PostalCodeClient" name="PostalCodeClient" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="VATClient">
+                VAT
+            </label>
+            <input type="number" step="any" class="form-control" id="VATClient" name="VATClient" placeholder="input data" />
+        </div>
+        <div class="form-group col-lg-3">
+            <label for="FiscalCodeClient">
+                Fiscal Code
+            </label>
+            <input type="number" step="any" class="form-control" id="FiscalCodeClient" name="FiscalCodeClient" placeholder="input data" />
+        </div>
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-heading">Records List</div>
+        <table id="recordList" class="table">
+            <thead>
+            <tr>
+                <th></th>
+                <th class="small">Description</th>
+                <th class="small">Unit Price</th>
+                <th class="small">Quantity</th>
+                <th class="small">Total Price</th>
+                <th class="small">VAT,%</th>
+                <th class="small">VAT Amount</th>
+                <th class="small">Total</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td><button class="removeRow btn btn-danger btn-sm"><i class="glyphicon glyphicon-remove"></i></button></td>
+                <td><div class="form-group"><input name="Description[]" type="text" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                <td><div class="form-group"><input name="UnitPrice[]" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                <td><div class="form-group"><input name="Quantity[]" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                <td><input name="TotalPrice[]" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+                <td><div class="form-group"><input name="VAT[]" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                <td><input name="VATAmount[]" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+                <td><input name="Total[]" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7"></td>
+                <td><input type="text" id="inputTotal" name="inputTotal" class="form-control input-sm" value="0.0" readonly/></td>
+            </tr>
+            <tr>
+                <td></td>
+                <td colspan="7"><button id="AddNewRow" class="btn btn-info btn-sm" data-target="#myModal">Add New Row</button></td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div class="row row-bottom">
+        <div class="col-lg-12 col-lg-offset-5">
+            <button id="Send" type="submit" class="btn btn-info btn-sm">Send Data Form</button>
+        </div>
+    </div>
+</form>
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form id="formModal" action="" method="post" data-toggle="validator" novalidate="true">
+                    <div class="row">
+                        <div class="col-lg-3">
+                            <label for="Article">
+                                Article
+                            </label>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="form-group col-lg-9">
+                            <select class="form-control" id="Article">
+                            </select>
+                        </div>
+                        <div class="form-group col-lg-3"><button id="Load" class="btn btn-success">Load</button></div>
+                    </div>
+                    <table class="table">
+                        <tr>
+                            <th class="small">Description</th>
+                            <th class="small">Unit Price</th>
+                            <th class="small">Quantity</th>
+                            <th class="small">Total Price</th>
+                            <th class="small">VAT,%</th>
+                            <th class="small">VAT Amount</th>
+                            <th class="small">Total</th>
+                        </tr>
+                        <tr>
+                            <td><div class="form-group"><input name="Description" type="text" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                            <td><div class="form-group"><input name="UnitPrice" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                            <td><div class="form-group"><input name="Quantity" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                            <td><input name="TotalPrice" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+                            <td><div class="form-group"><input name="VAT" type="number" step="any" class="form-control input-sm" required/><div class="help-block with-errors"></div></div></td>
+                            <td><input name="VATAmount" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+                            <td><input name="Total" type="text" class="form-control input-sm" value="0.0" readonly/></td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="Add" type="button" class="btn btn-primary">Add</button>
+                <button type="button" id="cancel" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+</div>
